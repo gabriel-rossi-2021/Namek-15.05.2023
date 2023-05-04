@@ -39,6 +39,11 @@ Route::get('/logout', "App\\Http\\Controllers\\shop\\MainController@logout")->na
 Route::get('/signup', "App\\Http\\Controllers\\shop\\MainController@inscription")->middleware(['guest']);;
 Route::post('/signup', "App\\Http\\Controllers\\shop\\MainController@register")->name('register.send');
 
+/* REDIRECTION SUR LA VUE RESETPASSWORD */
+Route::get('/reset', "App\\Http\\Controllers\\shop\\ResetPassword@index")->name('index.reset');
+Route::post('/rest', "App\\Http\\Controllers\\shop\\ResetPassword@sendEmail")->name('send.email');
+
+
 /* REDIRECTION SUR LA VIEW Panier*/
 Route::get('/panier', "App\\Http\\Controllers\\shop\\Panier@showPanier")->name('panier_show');
 Route::post('/panier/add/{id}', "App\\Http\\Controllers\\shop\\Panier@add")->name('panier_add');

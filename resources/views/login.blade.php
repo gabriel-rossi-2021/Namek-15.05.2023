@@ -40,7 +40,7 @@
             </div>
         </div>
         <button class="cta-btn">Se connecter</button>
-        <a class="forget-pass" href="#">Oublier mon mot de passe</a>
+        <a class="forget-pass" href="{{ route('index.reset') }}">Oublier mon mot de passe</a>
     </div>
 </form>
 
