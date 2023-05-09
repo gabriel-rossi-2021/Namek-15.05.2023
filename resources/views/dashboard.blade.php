@@ -12,6 +12,16 @@
     <div class="container py-5">
         <div class="row">
             <div class="col">
+                @if(session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}
+                    </div>
+                @endif
+                @error('current_password')
+                    <div class="alert alert-danger">
+                        <span>{{ $message }}</span>
+                    </div>
+                @enderror
                 <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="/">Accueil</a></li>
@@ -43,25 +53,17 @@
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush rounded-3">
                             <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-change-info">
-                                <p class="mb-0">Modifier informations générale</p>
+                                <p class="mb-0">Modifier informations générales</p>
                                 <i class="fa-solid fa-user-pen"></i>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form"  id="show-form-change-mdp">
                                 <p class="mb-0">Changer mot de passe</p>
                                 <i class="fa-solid fa-lock"></i>
                             </li>
-                            <!-- Si l'utilisateur n'a pas d'adresse -->
-                            @if (empty($user->address))
-                                <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-add-adresse">
-                                <p class="mb-0">Ajouter une adresse</p>
+                            <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-change-adresse">
+                                <p class="mb-0">Changer adresse</p>
                                 <i class="fa-solid fa-location-dot"></i>
                             </li>
-                            @elseif($user->address)
-                                <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-change-adresse">
-                                    <p class="mb-0">Changer adresse</p>
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </li>
-                            @endif
                         </ul>
                     </div>
                 </div>
@@ -87,7 +89,25 @@
                                 <label for="input-text">Username : </label><br>
                                 <input type="text" id="input-text" name="username" value="{{ old('username', $user->username) }}">
                             </td>
-
+                        </tr>
+                        <tr>
+                            <td>
+                                @error('email')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                                @error('phone_number')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                                @error('username')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                            </td>
                         </tr>
                         <tr>
                             <td><button type="submit" class="cta-btn">Modifier</button></td>
@@ -114,8 +134,14 @@
                             <td>
                                 <label for="password_confirmation">Confirmer mot de passe :</label><br>
                                 <input type="password" name="password_confirmation" id="password_confirmation">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 @error('password')
-                                <div class="alert alert-danger">{{ $message }}</div>
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
                                 @enderror
                             </td>
                         </tr>
@@ -124,80 +150,59 @@
                         </tr>
                     </table>
                 </form>
-                <!-- Si l'utilisateur n'a pas d'adresse -->
-                @if(empty($user->address))
-                    <form id="my-form-add-adresse" class="my-form" method="POST" action="#">
-                        @csrf
-                        <table>
-                            <tr>
-                                <td>
-                                    <label for="rue">Rue :</label><br>
-                                    <input type="text" name="rue" id="rue" value="">
-                                </td>
+                <form id="my-form-adresse" class="my-form" method="POST" action="{{ route('dashboard.update.address', $user->id_users) }}">
+                    @csrf
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="rue">Rue :</label><br>
+                                <input type="text" name="rue" id="rue" value="{{ old('ville', $user->address->street) }}">
+                            </td>
 
-                                <td>
-                                    <label for="NdeRue">N° de rue :</label><br>
-                                    <input type="number" name="NdeRue" id="NdeRue" value="">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="ville">Ville :</label><br>
-                                    <input type="text" name="ville" id="ville" value="">
-                                </td>
-                                <td>
-                                    <label for="npa">NPA :</label><br>
-                                    <input type="number" name="npa" id="npa" value="">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="pays">Pays :</label><br>
-                                    <input type="text" name="pays" id="pays" value="">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><button type="submit" class="cta-btn">Modifier</button></td>
-                            </tr>
-                        </table>
-                    </form>
-                @elseif($user->address)
-                    <form id="my-form-adresse" class="my-form" method="POST" action="#">
-                        @csrf
-                        <table>
-                            <tr>
-                                <td>
-                                    <label for="rue">Rue :</label><br>
-                                    <input type="text" name="rue" id="rue" value="{{ old('ville', $user->address->street) }}">
-                                </td>
-
-                                <td>
-                                    <label for="NdeRue">N° de rue :</label><br>
-                                    <input type="number" name="NdeRue" id="NdeRue" value="{{ old('NdeRue', $user->address->street_number) }}">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="ville">Ville :</label><br>
-                                    <input type="text" name="ville" id="ville" value="{{ old('ville', $user->address->city) }}">
-                                </td>
-                                <td>
-                                    <label for="npa">NPA :</label><br>
-                                    <input type="number" name="npa" id="npa" value="{{ old('npa', $user->address->NPA) }}">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="pays">Pays :</label><br>
-                                    <input type="text" name="pays" id="pays" value="{{ old('pays', $user->address->country) }}">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><button type="submit" class="cta-btn">Modifier</button></td>
-                            </tr>
-                        </table>
-                    </form>
-                @endif
+                            <td>
+                                <label for="NdeRue">N° de rue :</label><br>
+                                <input type="number" name="NdeRue" id="NdeRue" value="{{ old('NdeRue', $user->address->street_number) }}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="ville">Ville :</label><br>
+                                <input type="text" name="ville" id="ville" value="{{ old('ville', $user->address->city) }}">
+                            </td>
+                            <td>
+                                <label for="npa">NPA :</label><br>
+                                <input type="number" name="npa" id="npa" value="{{ old('npa', $user->address->NPA) }}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @error('rue')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                                @error('NdeRue')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                                @error('ville')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                                @error('npa')
+                                    <div class="alert alert-danger">
+                                        <span>{{ $message }}</span>
+                                    </div>
+                                @enderror
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" class="cta-btn">Modifier</button></td>
+                        </tr>
+                    </table>
+                </form>
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">

@@ -12,6 +12,12 @@
         <div class="container py-5">
             <div class="row">
                 <div class="col">
+                    @if(session()->has('success'))
+                        <br>
+                        <div class="alert alert-success" style="width: 60%;margin-left:20%">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
                     <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-5">
                         <ol class="breadcrumb mb-0">
                             <li class="breadcrumb-item"><a href="/">Accueil</a></li>
@@ -207,7 +213,7 @@
                         </h2>
                         <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                             <div class="accordion-body">
-                                <form action="#" method="POST">
+                                <form action="{{ route('add_product') }}" method="POST">
                                     @csrf
                                     <table>
                                         <tr>
@@ -227,7 +233,7 @@
                                             </td>
                                             <td>
                                                 <label for="product-size"><b>Poids [gr]</b></label><br>
-                                                <input type="number" placeholder="Taille du produit" name="product-size" id="input" value="3" disabled required>
+                                                <input type="number" placeholder="Taille du produit" name="product-size" id="input" required>
                                             </td>
                                         </tr>
                                         <tr>
@@ -247,7 +253,7 @@
                                             </td>
                                             <td>
                                                 <label for="product-price-ht"><b>Prix [HT]</b></label><br>
-                                                <input type="number"  min="0" placeholder="Prix hors taxe" name="product-price-ht" id="input" required>
+                                                <input type="number" placeholder="12,45" step="0.01" min="0" name="product-price-ht" id="input" required>
                                             </td>
                                         </tr>
                                         <tr>
@@ -256,12 +262,66 @@
                                                 <input type="number" min="0" placeholder="7" name="product-stock" id="input" required>
                                             </td>
                                             <td>
-                                                <label for="product-stock"><b>Category</b></label><br>
-                                                <select name="product-stock" id="input" required>
+                                                <label for="product-categrory"><b>Category</b></label><br>
+                                                <select name="product-categrory" id="input" required>
                                                     <option value="1">Plantes CBD</option>
-                                                    <option value="">Huiles CBD</option>
-                                                    <option value="1">Bonbons CBD</option>
+                                                    <option value="2">Huiles CBD</option>
+                                                    <option value="3">Bonbons CBD</option>
                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                @error('product-name')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-description')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-image')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-size')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-thc')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-cbd')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-culture')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-price-ht')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-stock')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
+                                                @error('product-categrory')
+                                                    <div class="alert alert-danger">
+                                                        <span>{{ $message }}</span>
+                                                    </div>
+                                                @enderror
                                             </td>
                                         </tr>
                                         <tr>
@@ -275,44 +335,6 @@
                 </div>
             </div>
         </div>
-        <!-- clique form apparait
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush rounded-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-change-info">
-                                <p class="mb-0">Modifier informations générale</p>
-                                <i class="fa-solid fa-user-pen"></i>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form"  id="show-form-change-mdp">
-                                <p class="mb-0">Changer mot de passe</p>
-                                <i class="fa-solid fa-lock"></i>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3 show-form" id="show-form-add-adresse">
-                                <p class="mb-0">Ajouter une adresse</p>
-                                <i class="fa-solid fa-location-dot"></i>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <form id="my-form-info" class="my-form" method="POST" action="#">
-                    @csrf
-                    <h1>test</h1>
-                </form>
-                <form id="my-form-mdp" class="my-form"  method="POST" action="">
-                    @csrf
-                    <h1>test</h1>
-                </form>
-                <form id="my-form-add-adresse" class="my-form" method="POST" action="#">
-                    @csrf
-                    <h1>test</h1>
-                </form>
-            </div>
-        </div>
-        -->
     </section>
     @include('Include/footer')
 </body>

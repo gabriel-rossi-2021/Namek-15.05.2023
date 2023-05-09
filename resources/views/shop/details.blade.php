@@ -9,6 +9,12 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+    @if(session()->has('success'))
+        <br>
+        <div class="alert alert-success" style="width: 60%;margin-left:20%">
+            {{ session()->get('success') }}
+        </div>
+    @endif
 <div class="container-details">
     <div class="card-container-details">
         <input type="radio" name="colors-btn" id="color-1" checked>
@@ -214,7 +220,27 @@
                                                         <input id="star-1" type="radio" name="rating" value="1">
                                                         <label for="star-1" class="star">&#9733;</label>
                                                     </div>
-
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <!-- captcha -->
+                                                    <label for="captcha"><b>Captcha</b> {{ $num1Avis }} + {{ $num2Avis }} = </label><br>
+                                                    <input type="number" id="input" name="captcha_avis" min="1" max="20" required>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    @error('captcha')
+                                                        <div class="alert alert-danger">
+                                                            <span>{{ $message }}</span>
+                                                        </div>
+                                                    @enderror
+                                                    @error('comment')
+                                                        <div class="alert alert-danger">
+                                                            <span>{{ $message }}</span>
+                                                        </div>
+                                                    @enderror
                                                 </td>
                                             </tr>
                                             <tr>

@@ -60,7 +60,7 @@ h1{
 
 /* CAROUSEL */
 .card img{
-    width: 500px;
+    width: 300px;
     height: 380px;
     margin: auto;
 }
@@ -74,10 +74,6 @@ h1{
 }
 
 @media (max-width: 1198px) {
-    /* DERNIERE SORTIES */
-    .w-100 {
-        width: 100%!important;
-    }
     .row-sorties>* {
         width:33%;
     }
@@ -98,11 +94,6 @@ h1{
     }
     #a-admin{
         margin-top: 5%;
-    }
-
-    /* DERNIERE SORTIES */
-    .w-100 {
-        width: 100%!important;
     }
     .row-sorties>* {
         width: 50%;

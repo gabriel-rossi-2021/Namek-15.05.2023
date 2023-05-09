@@ -5,6 +5,7 @@
     <title>Namek - Confirmation </title>
     <!-- Favicons -->
     <link rel="icon" href="{{asset('img/favicon.png')}}" sizes="32x32" type="image/png">
+    <link rel="stylesheet" href="{{ asset('css/style-print.css') }}" type="text/css" media="print">
     <style>
         .container{
             border: 3px solid #499b4a;
@@ -15,43 +16,94 @@
         .invoice-container {
             margin: 0 auto; /* centrage de la facture */
         }
+        #information{
+            width:100%;
+            height:auto;
+            text-align:center;
+        }
+        #information tbody{
+            background:#ffff;
+            padding:20px;
+        }
+        #produit-table{
+            width:100%;
+            height:auto;
+            background-color:#fff;
+            text-align:center;
+            padding:10px;
+            background:#fafafa
+        }
+        #produit-table th{
+            color:#6c757d;
+            font-size: 20px;
+        }
+        #produit-table td{
+            background-color:#fff;
+            font-size:12px;
+            color:#262626;
+        }
+        #table-info-produit{
+            width:100%;
+            height:auto;
+            background-color:#fff;
+            margin-top:0px;
+            padding:20px;
+            font-size:12px;
+            border: 1px solid #ebebeb;
+            border-top:0px;
+        }
+        #table-info-produit tr{
+            font-weight: bold;
+            padding: 5px;
+            text-align:center
+        }
+        #table-info-prix{
+            width:100%;
+            height:auto;
+            background-color:#fff;
+            padding:20px;
+            font-size:12px;
+            border: 1px solid #ebebeb;
+            border-top:0
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
     <div class="invoice-container" ref="document" id="html">
-        <table style="width:100%; height:auto;  text-align:center; " BORDER=0 CELLSPACING=0>
-            <tbody style="background:#ffff;padding:20px;">
-            <tr>
-                <td colspan="4" style="padding:20px 0px 0px 20px;text-align:left;font-size: 20px; font-weight: bold;color:#000;">Bonjour <span style="color:#499b4a;">{{ $user->first_name }} {{ $user->last_name }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:center;padding:10px 10px 10px 20px;font-size:25px;font-weight: bold;color:#499b4a">Confirmation de paiement</td>
-            </tr>
+        <table id="information"BORDER=0 CELLSPACING=0>
+            <tbody>
+                <tr>
+                    <td colspan="4" style="padding:20px 0px 0px 20px;text-align:left;font-size: 20px; font-weight: bold;color:#000;">Bonjour <span style="color:#499b4a;">{{ $user->first_name }} {{ $user->last_name }}</span></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:center;padding:10px 10px 10px 20px;font-size:25px;font-weight: bold;color:#499b4a">Confirmation de paiement</td>
+                </tr>
             </tbody>
         </table>
-        <table style="width:100%; height:auto; background-color:#fff;text-align:center; padding:10px; background:#fafafa">
+        <table id="produit-table">
             <tbody>
-            <tr style="color:#6c757d; font-size: 20px;">
-                <td style="border-right:1.5px dashed  #DCDCDC; width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Date de commande</td>
-                <td style="border-right: 1.5px dashed  #DCDCDC ;width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">N° de commande</td>
-                <td style="border-right:1.5px dashed  #DCDCDC ;width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Paiement</td>
-                <td style="width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Adresse de livraison</td>
+            <tr>
+                <th style="border-right:1.5px dashed  #DCDCDC; width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Date de commande</th>
+                <th style="border-right: 1.5px dashed  #DCDCDC ;width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">N° de commande</th>
+                <th style="border-right:1.5px dashed  #DCDCDC ;width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Paiement</th>
+                <th style="width:25%;font-size:16px;font-weight:700;padding: 0px 0px 10px 0px;">Adresse de livraison</th>
             </tr>
-            <tr style="background-color:#fff; font-size:12px; color:#262626;">
+            <tr>
                 <td style="border-right:1.5px dashed  #DCDCDC ;width:25%; font-weight:bold;background: #fafafa;">06.04.2023</td>
                 <td style="border-right:1.5px dashed  #DCDCDC ;width:25% ; font-weight:bold;background: #fafafa;">000000001</td>
                 <td style="border-right:1.5px dashed  #DCDCDC ;width:25%; font-weight:bold;background: #fafafa;">Carte de crédit</td>
-                <td style="width:25%; font-weight:bold;background: #fafafa;">Suisse, Bussigny</td>
+                <td style="width:25%; font-weight:bold;background: #fafafa;">Suisse, {{ $user->address->city }}</td>
             </tr>
             </tbody>
         </table>
-        <table style="width:100%; height:auto; background-color:#fff; margin-top:0px;  padding:20px; font-size:12px; border: 1px solid #ebebeb; border-top:0px;">
+        <table id="table-info-produit">
             <thead>
             <tr>
                 <td colspan="2" style="text-align: left;">INFORMATIONS PRODUITS</td>
             </tr>
-            <tr style="font-weight: bold; padding: 5px;text-align:center">
+            <tr style="">
                 <td>NOM PRODUIT</td>
                 <td >QUANTITE</td>
                 <td>PRIX HT</td>
@@ -73,7 +125,7 @@
             @endforeach
             </tbody>
         </table>
-        <table style="width:100%; height:auto; background-color:#fff;padding:20px; font-size:12px; border: 1px solid #ebebeb; border-top:0">
+        <table id="table-info-prix">
             <tbody>
             <tr>
                 <td style="font-weight: bold;padding:5px 0px">TOTAL HT</td>

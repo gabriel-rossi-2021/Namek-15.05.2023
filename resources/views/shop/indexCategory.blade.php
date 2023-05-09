@@ -51,39 +51,38 @@
                     <li data-target="#carouselThreeColumn" data-slide-to="2"></li>
                 </ol>
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row row-sorties">
-                            @foreach ($rss->slice(0, 3) as $rssProduct )
-                            <div class="col-xl-4 p-1">
-                                <div class="card">
-                                    <img src="{{asset('img/Products/'.$rssProduct->image_product)}}" class="w-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $rssProduct->name_product }}</h5>
-                                        <p class="card-text">{{ $rssProduct->prixTTC()}} CHF</p>
-                                        <a href="{{ route('detail_produit', ['id'=>$rssProduct->id_product]) }}" class="btn btn-outline-success w-100">VOIR PRODUIT</a>
+                    <div class="carousel-inner">
+                            @foreach ($rss->slice(0, 6) as $key => $rssProduct )
+                                @if($key % 2 == 0)
+                                    <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                        <div class="row">
+                                            <div class="col-6 p-1">
+                                                <div class="card">
+                                                    <img src="{{asset('img/Products/'.$rssProduct->image_product)}}" class="w-100">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">{{ $rssProduct->name_product }}</h5>
+                                                        <p class="card-text">{{ $rssProduct->prixTTC()}} CHF</p>
+                                                        <a href="{{ route('detail_produit', ['id'=>$rssProduct->id_product]) }}" class="btn btn-outline-success w-100">VOIR PRODUIT</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if(isset($rss[$key+1]))
+                                                <?php $rssProduct2 = $rss[$key+1]; ?>
+                                                <div class="col-6 p-1">
+                                                    <div class="card">
+                                                        <img src="{{asset('img/Products/'.$rssProduct2->image_product)}}" class="w-100">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">{{ $rssProduct2->name_product }}</h5>
+                                                            <p class="card-text">{{ $rssProduct2->prixTTC()}} CHF</p>
+                                                            <a href="{{ route('detail_produit', ['id'=>$rssProduct2->id_product]) }}" class="btn btn-outline-success w-100">VOIR PRODUIT</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                @endif
                             @endforeach
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <div class="row row-sorties">
-                            @foreach ($rss->slice(3) as $rssProduct )
-                            <div class="col-xl-4 p-1">
-                                <div class="card">
-                                    <img src="{{asset('img/Products/'.$rssProduct->image_product)}}" class="w-100">
-                                    <div class="card-body">
-                                    <h5 class="card-title">{{ $rssProduct->name_product }}</h5>
-                                    <p class="card-text">{{ $rssProduct->prixTTC()}} CHF</p>
-                                    <a href="{{ route('detail_produit', ['id'=>$rssProduct->id_product]) }}" class="btn btn-outline-success w-100">VOIR PRODUIT</a>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
                     <a class="carousel-control-prev" href="#carouselThreeColumn" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="sr-only">Previous</span>

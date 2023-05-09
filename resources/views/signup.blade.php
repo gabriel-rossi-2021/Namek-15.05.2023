@@ -96,7 +96,68 @@
                 <td>
                     <label for="pays"> <b>Pays</b></label><br>
                     <input type="text" placeholder="Votre pays" name="pays" id="input" value="Suisse" disabled required>
+                </td>
+                <td>
+                    <!-- captcha -->
+                    <label for="captcha"><b>Captcha</b> {{ $num1 }} + {{ $num2 }} = </label><br>
+                    <input type="number" id="input" name="captcha" min="1" max="20" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <p>*Pour l'instant nous livrons que en Suisse</p>
+                </td>
+                <td>
+                    @error('captcha')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('name')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('lastName')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('username')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('email')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('psw')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('rue')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('num-rue')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('ville')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('npa')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </td>
             </tr>
         </table>

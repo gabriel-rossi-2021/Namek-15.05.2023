@@ -93,6 +93,13 @@ class MainController extends Controller
 
     // DETAILS PRODUIT
     public function detailsProduit(Request $request, $id){
+        // NOMBRE RANDOM POUR CAPTCHA
+        $num1Avis = rand(1, 10);
+        $num2Avis = rand(1, 10);
+        // RESULTAT DU CAPTCHA
+        $resultAvis = $num1Avis + $num2Avis;
+        session(['captcha_result_avis' => $resultAvis]);
+
         $produit = Product::findOrFail($id);
 
         $opinions = $produit->opinions;
@@ -103,7 +110,7 @@ class MainController extends Controller
         // Moyenne des notaitons
         $averageRating = Opinions::where('product_id', $produit->id_product)->avg('notation');
 
-        return view('shop.details', compact('details', 'produit', 'opinions', 'averageRating'));
+        return view('shop.details', compact('details', 'produit', 'opinions', 'averageRating', 'num1Avis', 'num2Avis'));
     }
 
     // Créer un commentaire sur un produit
@@ -114,20 +121,33 @@ class MainController extends Controller
         $validatedData = $request->validate([
             'comment' => 'required|max:255',
             'rating' => 'required|integer|min:1|max:5',
+            'captcha_avis' => 'required',
+        ], [
+            'comment.regex' => 'Le commentaire ne doit pas dépasser 255 caractères',
         ]);
 
-        // New Opinions
-        $opinion = new Opinions;
-        $opinion->comment = $validatedData['comment'];
-        $opinion->notation = $validatedData['rating'];
-        $opinion->product_id = $details->id_product;
-        $opinion->user_id = auth()->id();
-        // DATE ET HEURE ACTUEL
-        $opinion->created_at = Carbon::now();
-        $opinion->updated_at = Carbon::now();
-        $opinion->save();
+        $captcha = $request->input('captcha_avis');
 
-        return redirect()->back()->with('success', 'Votre avis a été ajouté avec succès.');
+        // RECUPERER LE RESULTAT DU CAPTCHA
+        $resultAvis = session('captcha_result_avis');
+
+        // VERIFICATION CAPTCHA
+        if ($captcha == $resultAvis){
+            // New Opinions
+            $opinion = new Opinions;
+            $opinion->comment = $validatedData['comment'];
+            $opinion->notation = $validatedData['rating'];
+            $opinion->product_id = $details->id_product;
+            $opinion->user_id = auth()->id();
+            // DATE ET HEURE ACTUEL
+            $opinion->created_at = Carbon::now();
+            $opinion->updated_at = Carbon::now();
+            $opinion->save();
+
+            return redirect()->back()->with('success', 'Votre avis a été ajouté avec succès.');
+        }else{
+            return redirect()->back()->withErrors(['captcha' => 'Le captcha est pas correct'])->withInput();
+        }
     }
 
 
@@ -178,72 +198,100 @@ class MainController extends Controller
 
     // INSCRIPTION AFFICHE
     public function inscription(){
-        return view('signup');
+        // NOMBRE RANDOM POUR CAPTCHA
+        $num1 = rand(1, 10);
+        $num2 = rand(1, 10);
+        // RESULTAT DU CAPTCHA
+        $result = $num1 + $num2;
+        session(['captcha_result' => $result]);
+
+        return view('signup', compact('num1', 'num2'));
     }
 
     // CREATION UTILISATEUR
     public function register(Request $request)
     {
 
-        // Variable qui stock le pays par defaut
-        $PaysParDefaut = 'Suisse';
+         // Variable qui stock le pays par defaut
+         $PaysParDefaut = 'Suisse';
 
-        // Valider les données du formulaire
-        $validatedData = $request->validate([
-            'titre' => 'required|max:50',
-            'phone' => 'required',
-            'name' => 'required|string|max:50',
-            'lastName' => 'required|string|max:50',
-            'username' => 'required|string|max:50|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'psw' => 'required',
-            'confirm-psw' => 'required|same:psw',
-            'birth' => 'required|date|before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
-            'rue' => 'required',
-            'num-rue' => 'required',
-            'ville' => 'required',
-            'npa' => 'required',
-        ]);
+         // Valider les données du formulaire
+         $validatedData = $request->validate([
+             'titre' => 'required|max:50',
+             'phone' => ['required', 'regex:/^(?!0|\+41)\d{9}$/'],
+             'name' => 'required|string|max:50',
+             'lastName' => 'required|string|max:50',
+             'username' => 'required|regex:/^[^A-Z@]*$/|max:20',
+             'email' => 'required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/',
+             'psw' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/'],
+             'confirm-psw' => 'required|same:psw',
+             'birth' => 'required|date|before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
+             'rue' => 'required|regex:/^[a-zA-Z\s]+$/',
+             'num-rue' => 'required|regex:/^\d+$/',
+             'ville' => 'required|regex:/^[a-zA-Z]{1,50}$/',
+             'npa' => ['required', 'regex:/^(1[0-9]{3}|2[0-9]{3}|3[0-9]{3}|4[0-9]{3}|5[0-9]{3}|6[0-5][0-9]{2}|965[0-8])$/'],
+         ], [
+            'phone.regex' => 'Le numéro de téléphone doit être renseigné comme ceci 788237818',
+            'name.regex' => 'Le prénom doit contenir uniquement des lettres et maximum 50 caractères',
+            'lastName.regex' => 'Le nom doit contenir uniquement des lettres et maximum 50 caractères',
+            'username.regex' => "Le nom d'utilisateur ne doit pas contenir de majusucules et de '@'.",
+            'email.regex' => "L'email doit contenir un '@' et un '.'",
+            'psw.regex' => "Le mot de passe doit contenir au moins 8 caractère et 1 majuscule",
+            'rue.regex' => 'La rue ne peux contenir que des lettres miniscules et majuscules',
+            'num-rue.regex' => 'Le numéro de rue peux contenir que des chiffres',
+            'ville.regex' => 'La ville ne peux pas contenir de chiffre et dois faire max 50 caractères',
+            'npa.regex' => 'Le npa doit être entre 1000 et 9658',
 
-        $password = $validatedData['psw'];
+         ]);
 
-        // Vérifier si le mot de passe correspond à la confirmation
-        if ($password !== $validatedData['confirm-psw']) {
-            return redirect()->back()->withErrors(['password' => 'Le mot de passe et la confirmation ne correspondent pas.'])->withInput();
-        }
+         $password = $validatedData['psw'];
+         $captcha = $request->input('captcha');
 
-        // Créer un nouvel utilisateur
-        $user = new User();
-        $user->title = $validatedData['titre'];
-        $user->phone_number = $validatedData['phone'];
-        $user->first_name = $validatedData['name'];
-        $user->last_name = $validatedData['lastName'];
-        $user->username = $validatedData['username'];
-        $user->email = $validatedData['email'];
-        $user->password = $password . $this->salt;
-        $user->birth_date = $validatedData['birth'];
-        $user->function_id = 3;
+         // Vérifier si le mot de passe correspond à la confirmation
+         if ($password !== $validatedData['confirm-psw']) {
+             return redirect()->back()->withErrors(['password' => 'Le mot de passe et la confirmation ne correspondent pas.'])->withInput();
+         }
 
-        // Créer une nouvelle adresse
-        $address = new Address();
-        $address->street = $validatedData['rue'];
-        $address->street_number = $validatedData['num-rue'];
-        $address->city = $validatedData['ville'];
-        $address->NPA = $validatedData['npa'];
-        $address->country = $PaysParDefaut;
-        $address->save();
+         // RECUPERER LE RESULTAT DU CAPTCHA
+         $result = session('captcha_result');
 
-        // Lier l'adresse à l'utilisateur
-        $user->address()->associate($address);
+         // VERIFICATION CAPTCHA
+         if ($captcha == $result){
+             // Créer un nouvel utilisateur
+             $user = new User();
+             $user->title = $validatedData['titre'];
+             $user->phone_number = $validatedData['phone'];
+             $user->first_name = $validatedData['name'];
+             $user->last_name = $validatedData['lastName'];
+             $user->username = $validatedData['username'];
+             $user->email = $validatedData['email'];
+             $user->password = $password . $this->salt;
+             $user->birth_date = $validatedData['birth'];
+             $user->function_id = 3;
 
-        // Enregistrer l'utilisateur
-        $user->save();
+             // Créer une nouvelle adresse
+             $address = new Address();
+             $address->street = $validatedData['rue'];
+             $address->street_number = $validatedData['num-rue'];
+             $address->city = $validatedData['ville'];
+             $address->NPA = $validatedData['npa'];
+             $address->country = $PaysParDefaut;
+             $address->save();
 
-        // Connecter l'utilisateur
-        auth()->login($user);
+             // Lier l'adresse à l'utilisateur
+             $user->address()->associate($address);
 
-        // Rediriger vers la page d'accueil
-        return redirect('/');
+             // Enregistrer l'utilisateur
+             $user->save();
+
+             // Connecter l'utilisateur
+             auth()->login($user);
+
+             // Rediriger vers la page d'accueil
+             return redirect('/');
+         }else{
+             return redirect()->back()->withErrors(['captcha' => 'Le captcha est pas correct'])->withInput();
+         }
     }
 
     public function search(Request $request)

@@ -10,6 +10,7 @@
 <body>
 <!-- CHOIX 1 -->
 <form method="POST" action="{{ route('contact.envoyer') }}">
+    @csrf
     <div class="card">
         <h2 class="title">Contact</h2>
         <p class="subtitle">Avez-vous une question ?</p>
@@ -27,6 +28,15 @@
         <table>
             <tr>
                 <td>
+                    @if(session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="email"> <b>Email</b></label><br>
                     <input type="text" placeholder="Votre Email" name="email" id="input" required>
                 </td>
@@ -41,6 +51,25 @@
                 <td>
                     <label for="text"><b>Message</b></label><br>
                     <textarea placeholder="Votre demande / question" id="input" name="message"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @error('email')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('subject')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
+                    @error('message')
+                        <div class="alert alert-danger">
+                            <span>{{ $message }}</span>
+                        </div>
+                    @enderror
                 </td>
             </tr>
         </table>

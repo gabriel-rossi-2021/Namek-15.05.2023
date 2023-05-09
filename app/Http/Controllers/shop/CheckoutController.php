@@ -4,6 +4,9 @@ namespace App\Http\Controllers\shop;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Product;
+use Carbon\Carbon;
 use Cart;
 
 class CheckoutController extends Controller
@@ -44,5 +47,9 @@ class CheckoutController extends Controller
         }
 
         return view('checkout.checkout', ['user' => $user], compact('content', 'total_ttc_panier', 'total_ht_panier', 'tva', 'price_ht'));
+    }
+
+    public function add_order(){
+
     }
 }

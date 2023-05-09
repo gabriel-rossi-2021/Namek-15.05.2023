@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
 
+    protected $table = 'products';
+
     // TAUX TVA
     private static $facteur_tva = 1.077;
 
@@ -29,6 +31,9 @@ class Product extends Model
     public function opinions()
     {
         return $this->hasMany('App\Models\Opinions', 'product_id');
+    }
+    public function orders(){
+        return $this->belongsToMany(Order::class, 'order_product', 'product_id', 'order_id')->withPivot('quantity');
     }
 
     public function prixTTC(){

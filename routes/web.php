@@ -20,12 +20,13 @@ Route::post('/details/{id}', "App\\Http\\Controllers\\shop\\MainController@Ajout
 Route::get('dashboard', "App\\Http\\Controllers\\shop\\DashboardController@AfficheDashboard")->name('dashboard')->middleware('auth');
 Route::post('/dashboard/{id}', "App\\Http\\Controllers\\shop\\DashboardController@update")->name('dashboard.update');
 Route::post('/dashboard/{id}/update-password', "App\Http\Controllers\shop\DashboardController@updatePassword")->name('dashboard.update.mdp');
+Route::post('/dashboard/{id}/update-address', "App\Http\Controllers\shop\DashboardController@updateAddress")->name('dashboard.update.address');
 
 
 
 /* REDIRECTION SUR LA VIEW CONTACt */
 Route::get('/contact', "App\\Http\\Controllers\\shop\\ContactController@AfficheContactView")->name('contact.affiche');
-Route::post('/contact', "App\\Http\\Controllers\\shop\\ContactController@EnvoieContactForm")->name('contact.envoyer');
+Route::post('/contact/envoie', "App\\Http\\Controllers\\shop\\ContactController@EnvoieContactForm")->name('contact.envoyer');
 
 
 // Redirection vers la vue de connexion
@@ -56,6 +57,7 @@ Route::get('/search', "App\\Http\\Controllers\\shop\\MainController@search")->na
 
 /* REDIRECTION SUR LA VUE DASHBOARD ADMIN */
 Route::get('admin', "App\\Http\\Controllers\\shop\\AdminController@AfficheAdmin")->name('admin')->middleware('auth', 'admin');
+Route::post('admin', "App\\Http\\Controllers\\shop\\AdminController@AddProduct")->name('add_product');
 
 /* REDIRECTION SUR LA VUE Facture*/
 Route::get('/confirmation-paiement', "App\\Http\\Controllers\\shop\\CommandeController@AfficheFacture")->name('generation_facture');
