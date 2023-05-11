@@ -5,9 +5,11 @@ namespace App\Http\Controllers\shop;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use Cart;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CommandeController extends Controller
 {
@@ -25,6 +27,49 @@ class CommandeController extends Controller
         $tva = $total_ttc_panier / (1 + 0.077) * 0.077;
         $total_ht_panier = $total_ttc_panier - $tva;
 
+        // Stocker les ID des produits dans un tableau
+        $product_ids = array();
+        foreach($content as $item){
+            $product_ids[] = $item->get('id');
+        }
+
+        // AJOUTER INFORMATION DANS ORDER
+        $order = new Order();
+        $order->order_number = rand(100000, 999999);
+        $order->status = 'en attente';
+        $order->date_purchase = Carbon::now();
+        $order->user_id = $user->id_users;
+        $order->created_at = Carbon::now();
+        $order->updated_at = Carbon::now();
+        $order->save();
+
+        $orderId = Order::query()->orderBy('id_order', 'desc')->take(1)->get();
+
+        $order_id = null; // initialisation de $order_id
+
+        foreach($orderId as $orderids){
+            $order_id = $orderids->id_order;
+        }
+
+
+
+        // Insérer les produits de la commande dans la table order_product
+        foreach($content as $item) {
+            DB::table('order_product')->insert([
+                'order_id' => $order_id,
+                'product_id' => $item->get('id'),
+                'quantity' => $item->quantity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        foreach ($product_ids as $product_id) {
+            $order->products()->attach($product_id);
+        }
+
+
+
         $data = [
             'user' => $user,
             'content' => $content,
@@ -34,35 +79,8 @@ class CommandeController extends Controller
             'total_ht_panier' => $total_ht_panier
         ];
 
-        // AJOUTER INFORMATION DANS ORDER
-        $order = new Order();
-        $order->order_number = rand(100000, 999999);
-        $order->status = 'en attente';
-        $order->date_purchase = Carbon::now();
-        $order->user_id = $user->id_users;
-        // DATE ET HEURE ACTUEL
-        $order->created_at = Carbon::now();
-        $order->updated_at = Carbon::now();
-        $order->product_id = $item;
-
-
-        foreach($content as $item){
-            $product = Product::findOrFail($item->id_product);
-            $order->products()->attach($product, ['quantity' => $item->quantity]);
-
-            // NOUVELLE ENTREE DANS LA TABLE DE LIAISON ORDERPRODUCT
-            $orderProduct = new OrderProduct();
-            $orderProduct->order_id = $order->id_order;
-            $orderProduct->product_id = $product->id_product;
-            $orderProduct->quantity = $item->quantity;
-            $orderProduct->save();
-        }
-
-        $order->save();
-
         $pdf = app('dompdf.wrapper');
         $pdf->loadView('facture.facture', $data);
         return $pdf->stream('facture.pdf');
     }
-
 }

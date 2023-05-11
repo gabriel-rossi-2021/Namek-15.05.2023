@@ -18,6 +18,12 @@ class Order extends Model
 
     public function products()
     {
+        $order = Order::find($order_id);
+        $products = $order->products;
         return $this->belongsToMany(Product::class, 'order_product', 'order_id', 'product_id')->withPivot('quantity');
+    }
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class, 'order_id', 'id_order');
     }
 }
