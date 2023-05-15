@@ -1,0 +1,12 @@
+.row table{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .row table {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}

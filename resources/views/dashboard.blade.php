@@ -307,6 +307,46 @@
                             <div class="card-body">
                                 <h4 class="mb-4">Historique de commande</h4>
                             </div>
+                            <table id="cart" class="table table-hover table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>N° commande</th>
+                                    <th style="text-align: center">Satuts</th>
+                                    <th style="text-align: center">Date d'achat</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($order as $o )
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div>
+                                                    <span>{{ $o->order_number }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                @if($o->status == "En attente")
+                                                    <span class="badge badge-warning" style="background: rgb(211, 211, 29)">{{ $o->status }}</span>
+                                                @elseif($o->status == "En cours")
+                                                    <span class="badge badge-info" style="background: blue">{{ $o->status }}</span>
+                                                @elseif($o->status == "Terminé")
+                                                    <span class="badge badge-info" style="background: green">{{ $o->status }}</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div style="text-align: right;">
+                                                    <span style="text-align:right">{{ date_format(date_create($o->date_purchase), 'd.m.Y') }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -364,9 +404,6 @@
         formMdp.style.display = 'none';
         formAdresse.style.display = 'none';
     });
-
-
-
 </script>
     @include('Include/footer')
 </body>

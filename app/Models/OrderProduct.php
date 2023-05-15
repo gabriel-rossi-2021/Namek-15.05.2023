@@ -15,4 +15,8 @@ class OrderProduct extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id_product');
     }
 
+    public function getTotalPrice(){
+        return $this->quantity * $this->product->price_ht;
+    }
+
 }

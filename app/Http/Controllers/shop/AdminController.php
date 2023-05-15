@@ -4,13 +4,50 @@ namespace App\Http\Controllers\shop;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\Opinions;
+use App\Models\OrderProduct;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     // Afficher la view dashboard
-    public function AfficheAdmin(){
-        return view('admin');
+    public function AfficheAdmin(Request $request){
+        // USER CONNECTE
+        $user = $request->user();
+        // ALL COMMANDES
+        $order = Order::where('user_id', $user->id_users)->get();
+        // Total des ventes
+        $TotalProduct = OrderProduct::with('product')
+            ->selectRaw('SUM(quantity * products.price_ht) as total')
+            ->join('products', 'order_product.product_id', '=', 'products.id_product')
+            ->first()
+            ->total;
+
+        // Meilleur produit
+        $product = OrderProduct::select('product_id', DB::raw('SUM(quantity) as total'))
+        ->groupBy('product_id')
+        ->orderByDesc('total')
+        ->first();
+        $MeilleurProduct = Product::findOrFail($product->product_id);
+
+        // Nouveau utilisateur
+        $NewUser = User::query()->orderBy('created_at', 'desc')->take(3)->get();
+
+        // Nouveau produit
+        $NewProduct = Product::query()->orderBy('created_at', 'desc')->take(3)->get();
+
+        // Gérer les avis
+        $NewAvis = Opinions::query()->orderBy('created_at', 'desc')->take(3)->get();
+
+        // Nouvelle commande
+        $NewOrder = Order::query()->orderBy('created_at', 'desc')->take(3)->get();
+
+        // ALL AVIS
+        $avis = Opinions::all();
+        return view('admin',compact('order', 'avis', 'TotalProduct', 'MeilleurProduct', 'NewUser', 'NewProduct', 'NewAvis', 'NewOrder'));
     }
 
     public function AddProduct(Request $request){

@@ -20,7 +20,7 @@ section{
 .voir-plus{
     position: relative;
     top: -45px;
-    left: 85%;
+    left: 90%;
     width: 95px;
 }
 
@@ -104,7 +104,7 @@ textarea{
         margin-top: 5%;
     }
     .voir-plus{
-        left: 76%;
+        left: 81%;
         top: -43px;
     }
     .card-body h4{
@@ -123,7 +123,7 @@ textarea{
         margin-top: 5%;
     }
     .voir-plus{
-        left: 80%;
+        left: 85%;
         top: -45px;
     }
 

@@ -33,43 +33,6 @@ class CommandeController extends Controller
             $product_ids[] = $item->get('id');
         }
 
-        // AJOUTER INFORMATION DANS ORDER
-        $order = new Order();
-        $order->order_number = rand(100000, 999999);
-        $order->status = 'en attente';
-        $order->date_purchase = Carbon::now();
-        $order->user_id = $user->id_users;
-        $order->created_at = Carbon::now();
-        $order->updated_at = Carbon::now();
-        $order->save();
-
-        $orderId = Order::query()->orderBy('id_order', 'desc')->take(1)->get();
-
-        $order_id = null; // initialisation de $order_id
-
-        foreach($orderId as $orderids){
-            $order_id = $orderids->id_order;
-        }
-
-
-
-        // Insérer les produits de la commande dans la table order_product
-        foreach($content as $item) {
-            DB::table('order_product')->insert([
-                'order_id' => $order_id,
-                'product_id' => $item->get('id'),
-                'quantity' => $item->quantity,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        foreach ($product_ids as $product_id) {
-            $order->products()->attach($product_id);
-        }
-
-
-
         $data = [
             'user' => $user,
             'content' => $content,
@@ -81,6 +44,38 @@ class CommandeController extends Controller
 
         $pdf = app('dompdf.wrapper');
         $pdf->loadView('facture.facture', $data);
+
+        // AJOUTER INFORMATION DANS ORDER
+        $order = new Order();
+        $order->order_number = rand(100000, 999999);
+        $order->status = 'En attente';
+        $order->date_purchase = Carbon::now();
+        $order->user_id = $user->id_users;
+        $order->created_at = Carbon::now();
+        $order->updated_at = Carbon::now();
+        $order->save();
+
+        $orderId = Order::query()->orderBy('id_order', 'desc')->take(1)->get();
+
+        foreach($orderId as $orderids){
+            $order_id = $orderids->id_order;
+        }
+
+        // Insérer les produits de la commande dans la table order_product
+        foreach($content as $item) {
+            DB::table('order_product')->insert([
+                'order_id' => $orderids->id_order,
+                'product_id' => $item->get('id'),
+                'quantity' => $item->quantity,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
         return $pdf->stream('facture.pdf');
+
+        foreach ($product_ids as $product_id) {
+            $order->products()->attach($product_id);
+        }
     }
 }

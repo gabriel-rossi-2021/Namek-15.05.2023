@@ -30,8 +30,8 @@
                 <div class="col-xl-3 mb-30">
                     <div class="card" id="card-principale">
                         <div class="card-body">
-                          <h4 class="card-title">Vente total</h4>
-                          <p class="card-text" style="color:red;" id="card-principale-text">458 CHF</p>
+                          <h4 class="card-title">Total des ventes</h4>
+                          <p class="card-text" style="color:red;" id="card-principale-text">{{ number_format($TotalProduct,2) }} CHF</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     <div class="card" id="card-principale">
                         <div class="card-body">
                           <h4 class="card-title">Commande total</h4>
-                          <p class="card-text" id="card-principale-text">18</p>
+                          <p class="card-text" id="card-principale-text">{{ $order->COUNT('id_order') }}</p>
                         </div>
                     </div>
                 </div>
@@ -47,15 +47,15 @@
                     <div class="card" id="card-principale">
                         <div class="card-body">
                           <h4 class="card-title">Meilleur produit</h4>
-                          <p class="card-text" id="card-principale-text">Lemon Haze</p>
+                          <p class="card-text" id="card-principale-text">{{ $MeilleurProduct->name_product }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-3 mb-30">
                     <div class="card" id="card-principale">
                         <div class="card-body">
-                          <h4 class="card-title">Avis positif</h4>
-                          <p class="card-text" id="card-principale-text">56</p>
+                          <h4 class="card-title">Moyenne des avis</h4>
+                          <p class="card-text" id="card-principale-text">{{ number_format($avis->AVG('notation'),2) }}</p>
                         </div>
                     </div>
                 </div>
@@ -70,8 +70,8 @@
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
                                 <h4 class="mb-4">Nouveaux utilisateurs</h4>
-                                <a href="#">
-                                    <h6 class="voir-plus">VOIR PLUS</h6>
+                                <a href="{{ route('adminGerer') }}">
+                                    <h6 class="voir-plus">GÉRER</h6>
                                 </a>
                                 <div class="row">
                                     <table id="table-new-user">
@@ -82,14 +82,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="table-hr">
-                                                <td>Angelo Rogeiro</td>
-                                                <td>angelo.rogeiro@eduvaud.ch</td>
-                                            </tr>
-                                            <tr class="table-hr">
-                                                <td>Maxime Rossi</td>
-                                                <td>maximer2001@gmail.com</td>
-                                            </tr>
+                                            @foreach ($NewUser as $NouvelleUtilisateur )
+                                                <tr class="table-hr">
+                                                    <td>{{ $NouvelleUtilisateur->last_name }} {{ $NouvelleUtilisateur->first_name }}</td>
+                                                    <td>{{ $NouvelleUtilisateur->email }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -101,8 +99,8 @@
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
                                 <h4 class="mb-4">Nouveaux produits</h4>
-                                <a href="#">
-                                    <h6 class="voir-plus">VOIR PLUS</h6>
+                                <a href="{{ route('adminGerer') }}">
+                                    <h6 class="voir-plus">GÉRER</h6>
                                 </a>
                                 <div class="row">
                                     <table id="table-order">
@@ -114,16 +112,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="table-hr">
-                                                <td>Lemon Haze</td>
-                                                <td>25.04.2023</td>
-                                                <td>20 CHF</td>
-                                            </tr>
-                                            <tr class="table-hr">
-                                                <td>Bonbon - Banane</td>
-                                                <td>22.04.2023</td>
-                                                <td>12.50 CHF</td>
-                                            </tr>
+                                            @foreach ($NewProduct as $NouveauProduit )
+                                                <tr class="table-hr">
+                                                    <td>{{ $NouveauProduit->name_product }}</td>
+                                                    <td>{{ date_format(date_create($NouveauProduit->created_at), 'd.m.y') }}</td>
+                                                    <td>{{ number_format($NouveauProduit->price_ht, 2) }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -134,9 +129,9 @@
                     <div class="col-md-6">
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
-                                <h4 class="mb-4">Gérer les avis</h4>
-                                <a href="#">
-                                    <h6 class="voir-plus">VOIR PLUS</h6>
+                                <h4 class="mb-4">Nouveaux commentaires</h4>
+                                <a href="{{ route('adminGerer') }}">
+                                    <h6 class="voir-plus">GÉRER</h6>
                                 </a>
                                 <div class="row">
                                     <table id="table-order">
@@ -144,20 +139,17 @@
                                             <tr class="table-hr">
                                                 <th>Nom</th>
                                                 <th>Commentaire</th>
-                                                <th>Status</th>
+                                                <th style="text-align: right">Note</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="table-hr">
-                                                <td>Gabriel Rossi</td>
-                                                <td>Magnifique produit</td>
-                                                <td>En attente</td>
-                                            </tr>
-                                            <tr class="table-hr">
-                                                <td>Angelo Rogeiro</td>
-                                                <td>Fumez-tue !</td>
-                                                <td>Supprimé</td>
-                                            </tr>
+                                            @foreach ($NewAvis as $NouveauAvis )
+                                                <tr class="table-hr">
+                                                    <td>{{ $NouveauAvis->user->username }}</td>
+                                                    <td>{{ $NouveauAvis->comment }}</td>
+                                                    <td style="text-align: right">{{ $NouveauAvis->notation }}/5</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -168,9 +160,9 @@
                     <div class="col-md-6">
                         <div class="card mb-4 mb-md-0">
                             <div class="card-body">
-                                <h4 class="mb-4">Commandes en cours</h4>
-                                <a href="#">
-                                    <h6 class="voir-plus">VOIR PLUS</h6>
+                                <h4 class="mb-4">Nouvelles commandes</h4>
+                                <a href="{{ route('adminGerer') }}">
+                                    <h6 class="voir-plus">GÉRER</h6>
                                 </a>
                                 <div class="row">
                                     <table id="table-order">
@@ -178,20 +170,17 @@
                                             <tr class="table-hr">
                                                 <th>Number</th>
                                                 <th>Date d'achat</th>
-                                                <th>Status</th>
+                                                <th style="text-align: right">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="table-hr">
-                                                <td>000001</td>
-                                                <td>24.04.2023</td>
-                                                <td>En cours</td>
-                                            </tr>
-                                            <tr class="table-hr">
-                                                <td>000002</td>
-                                                <td>24.04.2023</td>
-                                                <td>Envoyé</td>
-                                            </tr>
+                                            @foreach ($NewOrder as $NouvelleCommande )
+                                                <tr class="table-hr">
+                                                    <td>{{ $NouvelleCommande->order_number }}</td>
+                                                    <td>{{ date_format(date_create($NouvelleCommande->date_purchase), 'd.m.y') }}</td>
+                                                    <td style="text-align: right">{{ $NouvelleCommande->status }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

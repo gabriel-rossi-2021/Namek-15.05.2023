@@ -95,7 +95,7 @@ class ProductsTableSeeder extends Seeder
         $produit->cbd_rate = 20;
         $produit->culture = "intérieur";
         $produit->price_ht = 18.570;
-        $produit->available = 10;
+        $produit->available = 0;
         $produit->category_id = 1;
         $produit->save();
 
@@ -125,7 +125,7 @@ class ProductsTableSeeder extends Seeder
         $produit->cbd_rate = 16;
         $produit->culture = "Namek";
         $produit->price_ht = 14.760;
-        $produit->available = 8;
+        $produit->available = 0;
         $produit->category_id = 1;
         $produit->save();
 
@@ -181,7 +181,7 @@ class ProductsTableSeeder extends Seeder
         $produit->cbd_rate = 40;
         $produit->culture = "Namek";
         $produit->price_ht = 16.620;
-        $produit->available = 22;
+        $produit->available = 0;
         $produit->category_id = 1;
         $produit->save();
 
@@ -224,7 +224,7 @@ class ProductsTableSeeder extends Seeder
         $produit->cbd_rate = 15;
         $produit->culture = "Namek";
         $produit->price_ht = 55.620;
-        $produit->available = 7;
+        $produit->available = 0;
         $produit->category_id = 2;
         $produit->save();
 
@@ -299,7 +299,7 @@ class ProductsTableSeeder extends Seeder
         $produit->cbd_rate = 10;
         $produit->culture = "Namek";
         $produit->price_ht = 11.610;
-        $produit->available = 5;
+        $produit->available = 0;
         $produit->category_id = 3;
         $produit->save();
 

@@ -223,7 +223,7 @@ class MainController extends Controller
              'lastName' => 'required|string|max:50',
              'username' => 'required|regex:/^[^A-Z@]*$/|max:20',
              'email' => 'required|regex:/^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/',
-             'psw' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/'],
+             'psw' => ['required', 'string', 'min:8', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/'],
              'confirm-psw' => 'required|same:psw',
              'birth' => 'required|date|before_or_equal:'.now()->subYears(18)->format('Y-m-d'),
              'rue' => 'required|regex:/^[a-zA-Z\s]+$/',

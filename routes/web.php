@@ -59,6 +59,13 @@ Route::get('/search', "App\\Http\\Controllers\\shop\\MainController@search")->na
 Route::get('admin', "App\\Http\\Controllers\\shop\\AdminController@AfficheAdmin")->name('admin')->middleware('auth', 'admin');
 Route::post('admin', "App\\Http\\Controllers\\shop\\AdminController@AddProduct")->name('add_product');
 
+/* REDIRECTION SUR LA VUE DASHBOARD Gerer Admin */
+Route::get('gerer', "App\\Http\\Controllers\\shop\\AdminGererController@index")->name('adminGerer');
+Route::delete('/gerer/user/{id}', "App\\Http\\Controllers\\shop\\AdminGererController@removeUser")->name('remove_user'); // SUPRESSION UTILISATEUR
+Route::delete('/gerer/product/{id}', "App\\Http\\Controllers\\shop\\AdminGererController@removeProduit")->name('remove_produit'); // SUPRESSION PRODUIT
+Route::delete('/gerer/comment/{id}', "App\\Http\\Controllers\\shop\\AdminGererController@removeComment")->name('remove_comment'); // SUPRESSION COMMENTAIRE
+Route::delete('/gerer/order/{id}', "App\\Http\\Controllers\\shop\\AdminGererController@removeOrder")->name('remove_order'); // SUPRESSION COMMANDES
+
 /* REDIRECTION SUR LA VUE Facture*/
 Route::get('/confirmation-paiement', "App\\Http\\Controllers\\shop\\CommandeController@AfficheFacture")->name('generation_facture');
 

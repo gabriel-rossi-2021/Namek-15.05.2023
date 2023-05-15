@@ -5,6 +5,7 @@ namespace App\Http\Controllers\shop;
 use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +18,14 @@ class DashboardController extends Controller
         // Si l'utilisateur est co
         $user = $request->user();
 
+        // COMMANDE
+        $order = Order::where('user_id', $user->id_users)->get();
+
         // FORMAT AFFICHAGE N° TEL SUISSE
         $phone_number = $user->phone_number;
         $formatted_number = substr($phone_number, 0, 2) . ' ' . substr($phone_number, 2, 3) . ' ' . substr($phone_number, 5, 2) . ' ' . substr($phone_number, 7, 2);
 
-        return view('dashboard', ['user' => $user], compact('formatted_number'));
+        return view('dashboard', ['user' => $user], compact('formatted_number', 'order'));
     }
 
     // Update form info gen
